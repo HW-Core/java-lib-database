@@ -11,7 +11,7 @@ public abstract class QueryHandler extends MyDBConnection {
     public abstract TableData loadData(String sqlConditions, RecordModel model);
 
     protected TableData loadData(String sqlSelect, String sqlConditions, RecordModel model) {
-        DBConnection myConn = new DBConnection(propConn.DB_NAME);
+        DBConnection myConn = new DBConnection(propConn.getDatabase());
 
         try {
             if (!sqlConditions.isEmpty() && !sqlConditions.trim().startsWith("WHERE")) {

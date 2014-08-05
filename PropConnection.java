@@ -12,9 +12,6 @@ import java.util.Properties;
 import javax.swing.JOptionPane;
 
 public class PropConnection {
-
-    public final String DB_NAME = "soul_db";
-
     Properties prop = null;
 
     public PropConnection() {
@@ -23,7 +20,7 @@ public class PropConnection {
         try {
             prop.load(new FileInputStream(new File("properties/connection.properties")));
         } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(null, "File di configurazione non trovato", "Avviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Configuration file not found", "Warning", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
         }
     }
@@ -48,7 +45,7 @@ public class PropConnection {
             return Integer.parseInt(prop.getProperty("port"));
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Server Port Errata.", "Connection Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error on Server Port.", "Connection Error", JOptionPane.ERROR_MESSAGE);
             return -1;
         }
     }
@@ -58,7 +55,11 @@ public class PropConnection {
     }
 
     public String getPassword() {
-        return "root";
+        return prop.getProperty("password");
+    }
+    
+    public String getDatabase() {
+        return prop.getProperty("db_name");
     }
 
     public String getMDB_Legacy() {
