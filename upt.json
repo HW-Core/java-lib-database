@@ -1,12 +1,12 @@
 {
-    "name": "Hw2/Java/library/database",
+    "name": "hw2/java/library/database",
     "license": "http://www.hyperweb2.com/terms",
     "dependencies": {
         "%common" : "hw2-core/java-library-common#*",
-        "Hw2/dep/apache-commons-lang3" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"
+        "hw2/dep/apache-commons-lang3" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"
     },
     "devDependencies": {
-        "Hw2/dep/apache-commons-lang3-doc" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-javadoc.jar"
+        "hw2/dep/apache-commons-lang3-doc" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-javadoc.jar"
     },
     "_comment_keep": "ensure we keep the right git repository configurations",
     "keep": [
