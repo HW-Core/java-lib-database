@@ -2,7 +2,6 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-
 package hw2.java.library.database;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class MyDBMethods {
      * @return la stringa con le adeguate sostituzioni
      */
     public static String fixSqlString(String stringa) {
-		// controllare l'esistenza di metodi preesistenti
+        // controllare l'esistenza di metodi preesistenti
         //XXX previene il crash durante l'esecuzione di una query di ricerca con apostrofo
         stringa = stringa.replace("'", "''");
         //XXX esclude la possibilita' di utilizzare gli altri caratteri speciali SQL durante la ricerca
@@ -51,12 +50,12 @@ public class MyDBMethods {
     // case String:
     public static String getSearchCond(String field, String searchVal) {
         searchVal = MyDBMethods.fixSqlString(searchVal);
-        return " "+field+" LIKE '%" + searchVal + "%'";
+        return " " + field + " LIKE '%" + searchVal + "%'";
     }
-    
+
     // default:
     public static <T> String getSearchCond(String field, T searchVal) {
-        return " "+field+" = " + searchVal;
+        return " " + field + " = " + searchVal;
     }
 
 }

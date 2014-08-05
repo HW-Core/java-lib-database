@@ -14,12 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class connects to a database and dumps all the tables and contents out to stdout in the form of
- * a set of SQL executable statements
+ * This class connects to a database and dumps all the tables and contents out
+ * to stdout in the form of a set of SQL executable statements
  */
 public class db2sql {
 
-    /** Dump the whole database to an SQL string */
+    /**
+     * Dump the whole database to an SQL string
+     */
     public static void dumpDB(ArrayList<String> tab, Connection dbConn, String filePath) {
 
         String columnNameQuote = "`";
@@ -153,7 +155,9 @@ public class db2sql {
         return;
     }
 
-    /** dump this particular table to the string buffer */
+    /**
+     * dump this particular table to the string buffer
+     */
     private static void dumpTable(Connection dbConn, StringBuffer result, String tableName) {
         try {
             // First we output the create table stuff
