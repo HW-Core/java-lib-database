@@ -1,4 +1,4 @@
-package Hw2.Java.library.database;
+package hw2.java.library.database;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import org.apache.commons.lang3.StringUtils;
 
 public class MysqlBackup {
 
@@ -75,7 +74,7 @@ public class MysqlBackup {
  private String getData(String host, String port, String user,
                         String password, String db, ArrayList<String> tables, OutputStream stream) throws Exception {
   
-  StringUtils
+  StringU
      
   String tab = tables.toArray().toString() " ");
   Process run = Runtime.getRuntime().exec(

@@ -3,9 +3,9 @@
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
 
-package Hw2.Java.library.database;
+package hw2.java.library.database;
 
-import Hw2.Java.library.common.VarAccessors;
+import hw2.java.library.common.VarAccessors;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

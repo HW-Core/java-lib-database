@@ -3,7 +3,7 @@
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
 
-package Hw2.Java.library.database.fielddecorators;
+package hw2.java.library.database.fielddecorators;
 
 /**
  * Base class for field decorators

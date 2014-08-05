@@ -3,10 +3,10 @@
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
 
-package Hw2.Java.library.database;
+package hw2.java.library.database;
 
 import java.lang.reflect.Field;
-import Hw2.Java.library.database.fielddecorators.FieldModel;
+import hw2.java.library.database.fielddecorators.FieldModel;
 import java.util.HashMap;
 
 abstract public class RecordModel {

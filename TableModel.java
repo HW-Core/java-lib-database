@@ -3,15 +3,15 @@
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
 
-package Hw2.Java.library.common.database;
+package hw2.java.library.common.database;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
-import Hw2.Java.library.database.fielddecorators.FieldModel;
-import Hw2.Java.library.database.fielddecorators.VisualName;
+import hw2.java.library.database.fielddecorators.FieldModel;
+import hw2.java.library.database.fielddecorators.VisualName;
 
 public class TableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
