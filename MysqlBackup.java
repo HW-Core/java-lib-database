@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import org.apache.commons.lang3.StringUtils;
 
 public class MysqlBackup {
 
@@ -79,8 +80,8 @@ public class MysqlBackup {
     private String getData(String host, String port, String user,
             String password, String db, ArrayList<String> tables, OutputStream stream) throws Exception {
 
-        StringU String tab = tables.toArray().toString() " ");
-  Process run = Runtime.getRuntime().exec(
+        String tab = StringUtils.join(tables.toArray(), password);
+        Process run = Runtime.getRuntime().exec(
                 "mysqldump --host=" + host + " --port=" + port
                 + " --user=" + user + " --password=" + password
                 + " --compact --complete-insert --extended-insert "
