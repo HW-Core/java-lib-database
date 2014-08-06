@@ -8,9 +8,19 @@ import java.sql.SQLException;
 
 public abstract class QueryHandler extends MyDBConnection {
 
-    public abstract TableData loadData(String sqlConditions, RecordModel model);
+    private RecordModel model;
 
-    protected TableData loadData(String sqlSelect, String sqlConditions, RecordModel model) {
+    public QueryHandler(RecordModel model) {
+        this.model = model;
+    }
+
+    public RecordModel getModel() {
+        return model;
+    }
+
+    public abstract TableData loadData(String sqlConditions);
+
+    protected TableData loadData(String sqlSelect, String sqlConditions) {
         DBConnection myConn = new DBConnection(propConn.getDatabase());
 
         try {

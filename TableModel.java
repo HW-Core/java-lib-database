@@ -21,9 +21,9 @@ public class TableModel extends AbstractTableModel {
     private final RecordModel fieldsInfo;
     private final QueryHandler handler;
 
-    public TableModel(RecordModel model, QueryHandler handler) {
-        this.fieldsInfo = model;
-        this.fields = model.getFields();
+    public TableModel(QueryHandler handler) {
+        this.fieldsInfo = handler.getModel();
+        this.fields = this.fieldsInfo.getFields();
         this.handler = handler;
         this.refreshList("");
     }
@@ -60,7 +60,7 @@ public class TableModel extends AbstractTableModel {
     }
 
     public void refreshList(String searchCondition) {
-        tableData = handler.loadData(searchCondition, this.fieldsInfo);
+        tableData = handler.loadData(searchCondition);
         fireTableDataChanged();
     }
 }
