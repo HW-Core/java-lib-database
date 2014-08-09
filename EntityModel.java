@@ -4,15 +4,19 @@
  */
 package hw2.java.library.database;
 
-import java.lang.reflect.Field;
 import hw2.java.library.database.fielddecorators.FieldModel;
-import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.util.LinkedHashMap;
 
-abstract public class RecordModel {
+abstract public class EntityModel {
 
-    private final HashMap<String, FieldModel> decList = new HashMap<>();
+    private final String tableName;
 
-    public RecordModel() {
+    private final LinkedHashMap<String, FieldModel> decList = new LinkedHashMap<>();
+
+    public EntityModel(String tableName) {
+        this.tableName = tableName;
+
         for (Field e : getClass().getFields()) {
             try {
                 FieldModel model = (FieldModel) e.get(this);
@@ -33,12 +37,20 @@ abstract public class RecordModel {
         return decList.get(key);
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public String[] getFieldsName() {
+        return decList.keySet().toArray(new String[decList.size()]);
+    }
+
     /**
      * Pass a clone of the list, to avoid external changes
      *
      * @return
      */
-    public HashMap<String, FieldModel> getFields() {
-        return (HashMap<String, FieldModel>) decList.clone();
+    public LinkedHashMap<String, FieldModel> getFields() {
+        return (LinkedHashMap<String, FieldModel>) decList.clone();
     }
 }

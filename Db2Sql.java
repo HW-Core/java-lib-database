@@ -1,4 +1,4 @@
-package hw2.common;
+package hw2.java.library.database;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * This class connects to a database and dumps all the tables and contents out
  * to stdout in the form of a set of SQL executable statements
  */
-public class db2sql {
+public class Db2Sql {
 
     /**
      * Dump the whole database to an SQL string
@@ -148,7 +148,7 @@ public class db2sql {
             dbConn.close();
             out.close();
         } catch (IOException ex) {
-            Logger.getLogger(db2sql.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Db2Sql.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use Options | File Templates.
         }

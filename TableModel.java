@@ -18,14 +18,14 @@ public class TableModel extends AbstractTableModel {
 
     private TableData tableData = null;
     HashMap<String, FieldModel> fields;
-    private final RecordModel fieldsInfo;
+    private final EntityModel fieldsInfo;
     private final QueryHandler handler;
 
     public TableModel(QueryHandler handler) {
         this.fieldsInfo = handler.getModel();
         this.fields = this.fieldsInfo.getFields();
         this.handler = handler;
-        this.refreshList("");
+        this.refreshList();
     }
 
     @Override
@@ -62,5 +62,9 @@ public class TableModel extends AbstractTableModel {
     public void refreshList(String searchCondition) {
         tableData = handler.loadData(searchCondition);
         fireTableDataChanged();
+    }
+    
+    public void refreshList() {
+        this.refreshList("");
     }
 }

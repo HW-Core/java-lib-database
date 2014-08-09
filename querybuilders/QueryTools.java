@@ -2,11 +2,11 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.java.library.database;
+package hw2.java.library.database.querybuilders;
 
 import java.util.List;
 
-public class MyDBMethods {
+public class QueryTools {
 
     /**
      * Fix per tutti i caratteri speciali di una query sql
@@ -48,13 +48,13 @@ public class MyDBMethods {
 
     // use polymorphism as "switcher" for search condition
     // case String:
-    public static String getSearchCond(String field, String searchVal) {
-        searchVal = MyDBMethods.fixSqlString(searchVal);
+    public static<T extends String> String getSearchCond(String field, T searchVal) {
+        searchVal = (T)QueryTools.fixSqlString(searchVal);
         return " " + field + " LIKE '%" + searchVal + "%'";
     }
 
     // default:
-    public static <T> String getSearchCond(String field, T searchVal) {
+    public static<T> String getSearchCond(String field, T searchVal) {
         return " " + field + " = " + searchVal;
     }
 

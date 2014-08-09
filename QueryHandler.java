@@ -5,35 +5,28 @@
 package hw2.java.library.database;
 
 import java.sql.SQLException;
+import org.apache.commons.lang3.StringUtils;
 
-public abstract class QueryHandler extends MyDBConnection {
+public abstract class QueryHandler extends DbConnection {
 
-    private RecordModel model;
+    protected final EntityModel model;
 
-    public QueryHandler(RecordModel model) {
+    public QueryHandler(EntityModel model) {
         this.model = model;
     }
 
-    public RecordModel getModel() {
+    public EntityModel getModel() {
         return model;
     }
-
-    public abstract TableData loadData(String sqlConditions);
-
-    protected TableData loadData(String sqlSelect, String sqlConditions) {
+    
+    public TableData loadData(String query) {
         DBConnection myConn = new DBConnection(propConn.getDatabase());
 
         try {
-            if (!sqlConditions.isEmpty() && !sqlConditions.trim().startsWith("WHERE")) {
-                sqlConditions = " WHERE " + sqlConditions;
-            }
-
-            sqlSelect = sqlSelect + sqlConditions;
-
-            myConn.prepStat = myConn.conn.prepareStatement(sqlSelect);
+            myConn.prepStat = myConn.conn.prepareStatement(query);
             myConn.rs = myConn.prepStat.executeQuery();
 
-            return new TableData(myConn.rs, model.getFields());
+            return new TableData(myConn.rs);
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -42,5 +35,21 @@ public abstract class QueryHandler extends MyDBConnection {
         }
 
         return null;
+    }
+    
+    public void updateData() {
+        
+    }
+    
+    public void insertData() {
+        
+    }
+    
+    public void replaceData() {
+        
+    }
+    
+    public void deleteData() {
+        
     }
 }

@@ -17,7 +17,7 @@ public class TableData {
     List<RecordSet> records = new ArrayList<>();
     ResultSetMetaData metaData;
 
-    public TableData(ResultSet rs, Map<String, FieldModel> decList) throws SQLException {
+    public TableData(ResultSet rs) throws SQLException {
         this.metaData = rs.getMetaData();
         while (rs.next()) {
             records.add(new RecordSet(rs));

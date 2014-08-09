@@ -4,13 +4,14 @@
  */
 package hw2.java.library.database;
 
+import hw2.java.library.database.querybuilders.QueryTools;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MyDBConnection extends MyDBMethods {
+public class DbConnection extends QueryTools {
 
     public PropConnection propConn = null;
 
@@ -79,7 +80,7 @@ public class MyDBConnection extends MyDBMethods {
 
     }
 
-    public MyDBConnection() {
+    public DbConnection() {
         propConn = new PropConnection();
 
         try {
