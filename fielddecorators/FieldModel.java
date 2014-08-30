@@ -9,9 +9,13 @@ package hw2.java.library.database.fielddecorators;
  */
 public abstract class FieldModel {
 
-    public final String field;
+    private final String field;
 
     public FieldModel(String field) {
         this.field = field;
+    }
+
+    public String getField() {
+        return field;
     }
 }

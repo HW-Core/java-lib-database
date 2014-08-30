@@ -30,10 +30,10 @@ abstract public class EntityModel {
     }
 
     public void defineField(FieldModel model) {
-        decList.put(model.field, model);
+        decList.put(model.getField(), model);
     }
 
-    public FieldModel getModel(int key) {
+    public FieldModel getFieldModel(String key) {
         return decList.get(key);
     }
 

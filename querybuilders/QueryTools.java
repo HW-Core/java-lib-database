@@ -41,21 +41,7 @@ public class QueryTools {
                 sql = sql.concat(",");
             }
         }
-        // chiude la query
-        sql = sql.concat(";");
+
         return sql;
     }
-
-    // use polymorphism as "switcher" for search condition
-    // case String:
-    public static<T extends String> String getSearchCond(String field, T searchVal) {
-        searchVal = (T)QueryTools.fixSqlString(searchVal);
-        return " " + field + " LIKE '%" + searchVal + "%'";
-    }
-
-    // default:
-    public static<T> String getSearchCond(String field, T searchVal) {
-        return " " + field + " = " + searchVal;
-    }
-
 }

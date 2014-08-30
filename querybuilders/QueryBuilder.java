@@ -4,22 +4,27 @@
  */
 package hw2.java.library.database.querybuilders;
 
-import java.lang.reflect.InvocationTargetException;
+import hw2.java.library.common.If;
+import hw2.java.library.common.Iface;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Simple sql query builder ( alpha )
+ * Simple sql query builder ( beta )
+ * Methods prefixed with "qb" are class tools and not related to sql syntax
  */
-public abstract class QueryBuilder {
+public abstract class QueryBuilder implements Iface {
 
-    private String query;
+    private String query,
+            pending;
 
     public QueryBuilder(String query) {
         this.query = query;
+        this.pending="";
     }
-    
+
     public QueryBuilder() {
         this("");
     }
@@ -30,7 +35,7 @@ public abstract class QueryBuilder {
         } catch (Exception ex) {
             Logger.getLogger(QueryBuilder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
@@ -55,9 +60,15 @@ public abstract class QueryBuilder {
 
     public abstract QueryBuilder from(String... args);
 
-    public abstract QueryBuilder into(String... args);
+    public abstract QueryBuilder into(String tableName, String... args);
+    
+    public abstract QueryBuilder into(String tableName);
 
     public abstract QueryBuilder values(String... args);
+    
+    public abstract QueryBuilder values(Object... args);
+
+    public abstract QueryBuilder in(String... args);
 
     /**
      * Consecutive args will be considered in AND cascade
@@ -85,32 +96,74 @@ public abstract class QueryBuilder {
 
     public abstract QueryBuilder and(String... args);
 
+    public abstract <T extends String> QueryBuilder qbCompare(String field, T searchVal);
+    
+    public abstract <T> QueryBuilder qbCompare(String field, T searchVal);
+    
+    public abstract <T> QueryBuilder qbCompare(Map.Entry<String,T> ... values);
+    
+    public abstract <T extends String> QueryBuilder qbAssign(String field, T assignVal);
+
+    public abstract <T> QueryBuilder qbAssign(String field, T assignVal);
+    
+    public abstract <T> QueryBuilder qbAssign(Map.Entry<String,T> ... values);
+    
+    public abstract QueryBuilder qbCloseQuery();
+    
+    public abstract String qbValueSep();
+    
+    /*
+     * Utility methods
+     *
+     *
+    */
+    
     /**
      * Special method to add information to the query parts
      *
-     * @param opt
+     * @param string
      * @return
      */
-    public QueryBuilder add(String[] string) {
-        return this.add("", "", string);
+    public QueryBuilder qbAdd(String[] string) {
+        return this.qbAdd("", "", string);
     }
 
-    public QueryBuilder add(String string) {
-        return this.add("", "", string);
+    public QueryBuilder qbAdd(String string) {
+        return this.qbAdd("", "", string);
     }
 
     /**
      * Special method to add information to the query parts
      *
      */
-    public <T> QueryBuilder add(String command, String separator, T... args) {
+    public <T> QueryBuilder qbAdd(String command, String separator, T... args) {
+        if (!command.isEmpty())
+            this.query += command + " ";
+        
         if (args.length > 0) {
             String arg = StringUtils.join(args, separator);
             if (!arg.isEmpty()) {
-                query += command + " " + arg + " ";
+                query += this.pending + arg + " ";
+                this.pending = "";
             }
         }
 
+        return this;
+    }
+    
+    public QueryBuilder qbSep() {
+        return this.qbAdd(qbValueSep());
+    }
+    
+    protected <T> QueryBuilder qbCloseQuery(String closeChar) {
+        this.pending="";
+        this.query += closeChar+" ";
+        return this;
+    }
+    
+    public QueryBuilder qbMerge(QueryBuilder toMerge) {
+        if (toMerge!=null)
+            this.qbAdd(toMerge.toString());
         return this;
     }
 
@@ -118,5 +171,10 @@ public abstract class QueryBuilder {
     @Override
     public String toString() {
         return query;
+    }
+
+    @Override
+    public If.Conditions _if(Object... _this) {
+        return If.condition(_this);
     }
 }

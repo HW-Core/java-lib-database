@@ -3,7 +3,8 @@
     "license": "http://www.hyperweb2.com/terms",
     "dependencies": {
         "%common" : "hw2-core/java-library-common#*",
-        "hw2/dep/apache-commons-lang3" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar"
+        "hw2/dep/apache-commons-lang3" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar",
+        "hw2/dep/java/swingx" : "https://java.net/projects/swingx/downloads/download/releases/swingx-all-1.6.4.jar"
     },
     "devDependencies": {
         "hw2/dep/apache-commons-lang3-doc" : "http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2-javadoc.jar"

@@ -12,6 +12,7 @@ import java.util.Properties;
 import javax.swing.JOptionPane;
 
 public class PropConnection {
+
     Properties prop = null;
 
     public PropConnection() {
@@ -57,12 +58,8 @@ public class PropConnection {
     public String getPassword() {
         return prop.getProperty("password");
     }
-    
+
     public String getDatabase() {
         return prop.getProperty("db_name");
-    }
-
-    public String getMDB_Legacy() {
-        return prop.getProperty("MDB_Legacy");
     }
 }
