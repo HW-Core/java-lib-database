@@ -4,25 +4,22 @@
  */
 package hw2.java.library.database;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import javax.swing.JTable;
+import org.jdesktop.swingx.table.DatePickerCellEditor;
 
 public class DbTableWorkers {
 
     public static void setTableRenderers(JTable table) {
-        //table.setDefaultRenderer(Timestamp.class, new DateRenderer());
-        //table.setDefaultRenderer(Date.class, new DateRenderer());
-        //table.setDefaultRenderer(Boolean.class, new BooleanRender());
     }
 
     public static void setTableEditors(JTable table) {
-        table.setDefaultEditor(Boolean.class, new DefaultCellEditor(new JCheckBox()));
+        table.setDefaultEditor(Date.class, new DatePickerCellEditor(DateFormat.getDateInstance(DateFormat.MEDIUM)));
+        table.setDefaultEditor(Timestamp.class, new DatePickerCellEditor());
     }
 
     /*public static class DateEditor extends DefaultCellEditor {
-
-
-
      }*/
 }

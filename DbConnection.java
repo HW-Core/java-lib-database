@@ -5,6 +5,7 @@
 package hw2.java.library.database;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,12 +27,12 @@ public class DbConnection {
      * @param dbName il nome del database a cui collegarsi
      * @return l'oggetto Connection appena aperto
      */
-    public Connection startConn(String dbName) {
+    public Connection startConn(String dbName,Driver driver,String query) {
         Connection c = null;
         try {
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver ());
+            DriverManager.registerDriver(driver);
             
-            c = DriverManager.getConnection(propConn.getConnection(dbName), propConn.getUsername(), propConn.getPassword());
+            c = DriverManager.getConnection(propConn.getConnection(dbName,query), propConn.getUsername(), propConn.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();
         }

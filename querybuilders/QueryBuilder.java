@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Simple sql query builder ( beta )
- * Methods prefixed with "qb" are class tools and not related to sql syntax
+ * Simple sql query builder ( beta ) Methods prefixed with "qb" are class tools
+ * and not related to sql syntax
  */
 public abstract class QueryBuilder implements Iface {
 
@@ -22,7 +22,7 @@ public abstract class QueryBuilder implements Iface {
 
     public QueryBuilder(String query) {
         this.query = query;
-        this.pending="";
+        this.pending = "";
     }
 
     public QueryBuilder() {
@@ -61,11 +61,11 @@ public abstract class QueryBuilder implements Iface {
     public abstract QueryBuilder from(String... args);
 
     public abstract QueryBuilder into(String tableName, String... args);
-    
+
     public abstract QueryBuilder into(String tableName);
 
     public abstract QueryBuilder values(String... args);
-    
+
     public abstract QueryBuilder values(Object... args);
 
     public abstract QueryBuilder in(String... args);
@@ -97,27 +97,26 @@ public abstract class QueryBuilder implements Iface {
     public abstract QueryBuilder and(String... args);
 
     public abstract <T extends String> QueryBuilder qbCompare(String field, T searchVal);
-    
+
     public abstract <T> QueryBuilder qbCompare(String field, T searchVal);
-    
-    public abstract <T> QueryBuilder qbCompare(Map.Entry<String,T> ... values);
-    
+
+    public abstract <T> QueryBuilder qbCompare(Map.Entry<String, T>... values);
+
     public abstract <T extends String> QueryBuilder qbAssign(String field, T assignVal);
 
     public abstract <T> QueryBuilder qbAssign(String field, T assignVal);
-    
-    public abstract <T> QueryBuilder qbAssign(Map.Entry<String,T> ... values);
-    
+
+    public abstract <T> QueryBuilder qbAssign(Map.Entry<String, T>... values);
+
     public abstract QueryBuilder qbCloseQuery();
-    
+
     public abstract String qbValueSep();
-    
+
     /*
      * Utility methods
      *
      *
-    */
-    
+     */
     /**
      * Special method to add information to the query parts
      *
@@ -137,9 +136,10 @@ public abstract class QueryBuilder implements Iface {
      *
      */
     public <T> QueryBuilder qbAdd(String command, String separator, T... args) {
-        if (!command.isEmpty())
+        if (!command.isEmpty()) {
             this.query += command + " ";
-        
+        }
+
         if (args.length > 0) {
             String arg = StringUtils.join(args, separator);
             if (!arg.isEmpty()) {
@@ -150,20 +150,28 @@ public abstract class QueryBuilder implements Iface {
 
         return this;
     }
-    
+
+    /**
+     * Put an arg separator as "pending" char that will be added to the query
+     * only if followed by another argument ( not command )
+     *
+     * @return
+     */
     public QueryBuilder qbSep() {
-        return this.qbAdd(qbValueSep());
-    }
-    
-    protected <T> QueryBuilder qbCloseQuery(String closeChar) {
-        this.pending="";
-        this.query += closeChar+" ";
+        this.pending = qbValueSep();
         return this;
     }
-    
+
+    protected <T> QueryBuilder qbCloseQuery(String closeChar) {
+        this.pending = "";
+        this.query += closeChar + " ";
+        return this;
+    }
+
     public QueryBuilder qbMerge(QueryBuilder toMerge) {
-        if (toMerge!=null)
+        if (toMerge != null) {
             this.qbAdd(toMerge.toString());
+        }
         return this;
     }
 

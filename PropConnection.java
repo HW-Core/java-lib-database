@@ -26,13 +26,16 @@ public class PropConnection {
         }
     }
 
-    public String getConnection(String dbName) {
-//		jdbc:mysql://192.168.1.40:3306/dbName
+    public String getConnection(String dbName, String query) {
+//		jdbc:mysql://ip:port/dbName?query
 
         String conn = prop.getProperty("connection");
-        conn = conn + prop.getProperty("server") + ":";
-        conn = conn + prop.getProperty("port") + "/";
-        conn = conn + dbName;
+        conn += prop.getProperty("server") + ":";
+        conn += prop.getProperty("port") + "/";
+        conn += dbName;
+        if (!query.isEmpty()) {
+            conn += "?" + query;
+        }
 
         return conn;
     }

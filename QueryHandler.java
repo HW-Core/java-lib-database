@@ -4,6 +4,7 @@
  */
 package hw2.java.library.database;
 
+import java.sql.Driver;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -13,14 +14,19 @@ public abstract class QueryHandler extends DbConnection {
 
     protected final EntityModel model;
     protected Class rsClass;
+    private final Driver driver;
+    private final String connQuery;
 
-    public QueryHandler(EntityModel model) {
-        this(model, RecordSet.class);
+    public QueryHandler(EntityModel model, Driver driver, String connQuery) {
+        this(model, RecordSet.class, driver, connQuery);
     }
 
-    public <T extends RecordSet> QueryHandler(EntityModel model, Class<T> rsClass) {
+    public <T extends RecordSet> QueryHandler(EntityModel model, Class<T> rsClass, Driver driver, String connQuery) {
+        super();
         this.model = model;
         this.rsClass = rsClass;
+        this.driver = driver;
+        this.connQuery = connQuery;
     }
 
     @Override
@@ -50,7 +56,7 @@ public abstract class QueryHandler extends DbConnection {
 
     public ResultSet execute(String query) {
         try {
-            this.conn = this.startConn(propConn.getDatabase());
+            this.conn = this.startConn(propConn.getDatabase(), this.driver, this.connQuery);
 
             prepStat = conn.prepareStatement(query);
             if (prepStat.execute()) {

@@ -4,7 +4,8 @@
  */
 package hw2.java.library.database.querybuilders;
 
-import java.util.ArrayList;
+import hw2.java.library.common.DateTools;
+import java.text.DateFormat;
 import java.util.Map;
 
 public class MysqlQBuilder extends QueryBuilder {
@@ -20,17 +21,17 @@ public class MysqlQBuilder extends QueryBuilder {
 
     @Override
     public QueryBuilder insert() {
-        return this.qbAdd("INSERT","","");
+        return this.qbAdd("INSERT", "", "");
     }
 
     @Override
     public QueryBuilder replace() {
-        return this.qbAdd("REPLACE","","");
+        return this.qbAdd("REPLACE", "", "");
     }
 
     @Override
     public QueryBuilder delete() {
-        return this.qbAdd("DELETE","","");
+        return this.qbAdd("DELETE", "", "");
     }
 
     @Override
@@ -49,32 +50,41 @@ public class MysqlQBuilder extends QueryBuilder {
 
     @Override
     public QueryBuilder into(String tableName, String... args) {
-        return this.qbAdd("INTO","",tableName).qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
+        return this.qbAdd("INTO", "", tableName).qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
     }
-    
+
     @Override
     public QueryBuilder into(String tableName) {
-        return this.qbAdd("INTO","",tableName);
+        return this.qbAdd("INTO", "", tableName);
     }
 
     @Override
     public QueryBuilder values(String... args) {
         return this.qbAdd("VALUES").qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
     }
-    
+
     @Override
     public QueryBuilder values(Object... args) {
         String sValues[] = new String[args.length];
-        for (int i=0;i<args.length;i++) {
+
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] != null) {
+                System.out.println(args[i].getClass().getName());
+            }
+
             if (args[i] instanceof String) {
-                sValues[i]="'"+args[i]+"'";
-            } if (args[i] == null) {
-                sValues[i]="NULL";
+                sValues[i] = "'" + args[i] + "'";
+            } else if (args[i] instanceof java.util.Date) {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                sValues[i] = "'" + sdf.format(args[i]) + "'";
+            } else if (args[i] == null) {
+                sValues[i] = "NULL";
             } else {
-                sValues[i]=args[i].toString();
+                sValues[i] = args[i].toString();
             }
         }
-        
+
         return this.values(sValues);
     }
 
@@ -140,22 +150,23 @@ public class MysqlQBuilder extends QueryBuilder {
     @Override
     public <T extends String> QueryBuilder qbCompare(String field, T searchVal) {
         searchVal = (T) QueryTools.fixSqlString(searchVal);
-        return this.qbAdd(" " + field + " LIKE '%" + searchVal + "%'");
+        return this.qbAdd(" " + field + " LIKE '%" + searchVal + "%'").qbSep();
     }
 
     // default:
     @Override
     public <T> QueryBuilder qbCompare(String field, T searchVal) {
-        return this.qbAdd(" " + field + " = " + searchVal);
+        return this.qbAdd(" " + field + " = " + searchVal).qbSep();
     }
 
     @Override
     public <T> QueryBuilder qbCompare(Map.Entry<String, T>... values) {
-        for (int i=0;i<values.length;i++) {
+        for (int i = 0; i < values.length; i++) {
             Map.Entry<String, T> entry = values[i];
             this.qbCompare(entry.getKey(), entry.getValue());
-            if (i<values.length-1)
+            if (i < values.length - 1) {
                 this.qbSep();
+            }
         }
 
         return this;
@@ -173,8 +184,12 @@ public class MysqlQBuilder extends QueryBuilder {
 
     @Override
     public <T> QueryBuilder qbAssign(Map.Entry<String, T>... values) {
-        for (Map.Entry<String, T> entry : values) {
-            qbAssign(entry.getKey(), entry.getValue());
+        for (int i = 0; i < values.length; i++) {
+            Map.Entry<String, T> entry = values[i];
+            this.qbAssign(entry.getKey(), entry.getValue());
+            if (i < values.length - 1) {
+                this.qbSep();
+            }
         }
 
         return this;
