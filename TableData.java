@@ -4,13 +4,13 @@
  */
 package hw2.java.library.database;
 
-import hw2.java.library.database.fielddecorators.FieldModel;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +24,8 @@ public class TableData implements Cloneable {
     /**
      * Table-PrimaryKeys
      */
-    private HashMap<String, ArrayList<String>> primaryKeys;
-    private String[] tables;
+    private HashSet<DbId.Field> primaryKeys;
+    private HashMap<String, HashMap<String, HashMap<String, HashMap<String, String>>>> dbMap;
 
     public TableData(QueryHandler handler) throws SQLException {
         records = new ArrayList<>();
@@ -40,6 +40,8 @@ public class TableData implements Cloneable {
         }
 
         this.metaData = rs.getMetaData();
+        this.primaryKeys = new HashSet<>();
+        this.dbMap = new HashMap<>();
 
         this.retrieveSpecialData(this.metaData, handler.conn.getMetaData());
 
@@ -47,8 +49,10 @@ public class TableData implements Cloneable {
             this.metaData = rs.getMetaData();
             while (rs.next()) {
                 try {
-                    records.add(recordSet.getDeclaredConstructor(ResultSet.class, TableData.class)
-                            .newInstance(rs, this));
+                    records.add(
+                            recordSet.getDeclaredConstructor(ResultSet.class, TableData.class)
+                            .newInstance(rs, this)
+                    );
                 } catch (Exception ex) {
                     Logger.getLogger(TableData.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -70,12 +74,8 @@ public class TableData implements Cloneable {
         return metaData;
     }
 
-    public HashMap<String, ArrayList<String>> getPrimaryKeys() {
+    public HashSet<DbId.Field> getPrimaryKeys() {
         return primaryKeys;
-    }
-
-    public String[] getTables() {
-        return tables;
     }
 
     public ArrayList<RecordSet> getInserted() {
@@ -88,6 +88,18 @@ public class TableData implements Cloneable {
 
     public ArrayList<RecordSet> getUpdated() {
         return updated;
+    }
+
+    public HashMap<String, HashMap<String, HashMap<String, HashMap<String, String>>>> getDbMap() {
+        return dbMap;
+    }
+
+    public String getFieldClassName(FieldModel model) {
+        return dbMap.get(model.getEntityModel().getSchemaModel().getDbModel().getDbName())
+                .get(model.getEntityModel().getSchemaModel().getSchemaName())
+                .get(model.getEntityModel().getTableName())
+                .get(model.getFieldName());
+
     }
 
     public void remove(int index) {
@@ -105,7 +117,7 @@ public class TableData implements Cloneable {
         this.inserted.add(rs);
     }
 
-    public <V> void update(int index, FieldModel col, V val) {
+    public <V> void update(int index, DbId col, V val) {
         this.getRecords().get(index).setValue(col, val);
         RecordSet rs = this.getRecords().get(index);
         // check if update/insert row for this field already exists
@@ -115,42 +127,52 @@ public class TableData implements Cloneable {
     }
 
     private void retrieveSpecialData(ResultSetMetaData rsMeta, DatabaseMetaData dbMeta) {
-        ArrayList<String> names = new ArrayList<>();
+        HashMap<String, HashMap<String, HashMap<String, HashMap<String, String>>>> dbMap = new HashMap<>();
+
         try {
             for (int col = 1; col <= rsMeta.getColumnCount(); col++) {
-                String name = rsMeta.getTableName(col);
-                // avoid duplicates
-                if (!names.contains(name)) {
-                    names.add(name);
+                String catalog = rsMeta.getCatalogName(col);
+                String schema = rsMeta.getSchemaName(col);
+                String table = rsMeta.getTableName(col);
+                String field = rsMeta.getColumnName(col);
+                String clName = rsMeta.getColumnClassName(col);
+
+                if (!dbMap.containsKey(catalog)) {
+                    dbMap.put(catalog, new HashMap<String, HashMap<String, HashMap<String, String>>>());
+                }
+
+                if (!dbMap.get(catalog).containsKey(schema)) {
+                    dbMap.get(catalog).put(schema, new HashMap<String, HashMap<String, String>>());
+                }
+
+                if (!dbMap.get(catalog).get(schema).containsKey(table)) {
+                    dbMap.get(catalog).get(schema).put(table, new HashMap<String, String>());
+
+                    if (table == null || table.isEmpty()) // calculated fields ( not table related )
+                    {
+                        continue;
+                    }
+
+                    try {
+                        ResultSet rs = dbMeta.getPrimaryKeys(catalog, schema, table);
+                        while (rs.next()) {
+
+                            String pkName = rs.getString("COLUMN_NAME");
+                            primaryKeys.add(new DbId.Field(catalog, schema, table, pkName));
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(QueryHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                if (!dbMap.get(catalog).get(schema).get(table).containsKey(field)) {
+                    dbMap.get(catalog).get(schema).get(table).put(field, clName);
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(QueryHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        this.tables = names.toArray(new String[names.size()]);
-
-        // table , key
-        HashMap<String, ArrayList<String>> pKeys = new HashMap<>();
-        // loop tables
-        for (String name : names) {
-            try {
-                ResultSet rs = dbMeta.getPrimaryKeys(null, null, name);
-                while (rs.next()) {
-                    if (pKeys.get(name) == null) {
-                        pKeys.put(name, new ArrayList<String>());
-                    }
-
-                    String pkName = rs.getString("COLUMN_NAME");
-                    if (!pKeys.get(name).contains(pkName)) {
-                        pKeys.get(name).add(pkName);
-                    }
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(QueryHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        this.primaryKeys = pKeys;
+        this.dbMap = dbMap;
     }
 }

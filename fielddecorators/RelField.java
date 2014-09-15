@@ -7,14 +7,16 @@ package hw2.java.library.database.fielddecorators;
 import hw2.java.library.database.EntityModel;
 import hw2.java.library.database.FieldModel;
 
-/**
- *
- * @author giuseppe
- */
-public class HiddenField extends FieldModel {
+public class RelField extends HiddenField {
 
-    public HiddenField(String field, EntityModel model) {
+    private final FieldModel joinField;
+
+    public RelField(String field, EntityModel model, FieldModel joinField) {
         super(field, model);
+        this.joinField = joinField;
     }
 
+    public FieldModel getJoinField() {
+        return joinField;
+    }
 }

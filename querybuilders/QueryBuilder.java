@@ -5,24 +5,32 @@
 package hw2.java.library.database.querybuilders;
 
 import hw2.java.library.common.If;
-import hw2.java.library.common.Iface;
+import hw2.java.library.common.IfIface;
+import hw2.java.library.common.StringTools;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Simple sql query builder ( beta ) Methods prefixed with "qb" are class tools
  * and not related to sql syntax
  */
-public abstract class QueryBuilder implements Iface {
+public abstract class QueryBuilder implements IfIface {
 
-    private String query,
-            pending;
+    public interface JoinTypes {
+
+        public String getType();
+    }
+
+    public interface OrderType {
+
+        public String getType();
+    }
+
+    private String query;
 
     public QueryBuilder(String query) {
         this.query = query;
-        this.pending = "";
     }
 
     public QueryBuilder() {
@@ -60,6 +68,10 @@ public abstract class QueryBuilder implements Iface {
 
     public abstract QueryBuilder from(String... args);
 
+    public abstract QueryBuilder join(JoinTypes type, String... args);
+
+    public abstract QueryBuilder on(String... args);
+
     public abstract QueryBuilder into(String tableName, String... args);
 
     public abstract QueryBuilder into(String tableName);
@@ -96,19 +108,30 @@ public abstract class QueryBuilder implements Iface {
 
     public abstract QueryBuilder and(String... args);
 
-    public abstract <T extends String> QueryBuilder qbCompare(String field, T searchVal);
+    public abstract <T> QueryBuilder qbCompare();
 
-    public abstract <T> QueryBuilder qbCompare(String field, T searchVal);
+    public abstract <T extends String> QueryBuilder qbCompare(T searchVal);
+
+    public abstract <T> QueryBuilder qbCompare(T searchVal);
 
     public abstract <T> QueryBuilder qbCompare(Map.Entry<String, T>... values);
 
-    public abstract <T extends String> QueryBuilder qbAssign(String field, T assignVal);
+    public abstract <T> QueryBuilder qbAssign();
 
-    public abstract <T> QueryBuilder qbAssign(String field, T assignVal);
+    public abstract <T extends String> QueryBuilder qbAssign(T assignVal);
+
+    public abstract <T> QueryBuilder qbAssign(T assignVal);
 
     public abstract <T> QueryBuilder qbAssign(Map.Entry<String, T>... values);
 
     public abstract QueryBuilder qbCloseQuery();
+
+    /**
+     * Build column/table names using separators
+     *
+     * @return
+     */
+    public abstract QueryBuilder qbBuildName(String... names);
 
     public abstract String qbValueSep();
 
@@ -137,35 +160,25 @@ public abstract class QueryBuilder implements Iface {
      */
     public <T> QueryBuilder qbAdd(String command, String separator, T... args) {
         if (!command.isEmpty()) {
-            this.query += command + " ";
+            this.query += " " + command + " ";
         }
 
         if (args.length > 0) {
-            String arg = StringUtils.join(args, separator);
+            String arg = StringTools.join(separator, args);
             if (!arg.isEmpty()) {
-                query += this.pending + arg + " ";
-                this.pending = "";
+                query += arg;
             }
         }
 
         return this;
     }
 
-    /**
-     * Put an arg separator as "pending" char that will be added to the query
-     * only if followed by another argument ( not command )
-     *
-     * @return
-     */
-    public QueryBuilder qbSep() {
-        this.pending = qbValueSep();
-        return this;
+    public QueryBuilder qbOrderType(OrderType type) {
+        return this.qbAdd(type.getType(), "", "");
     }
 
-    protected <T> QueryBuilder qbCloseQuery(String closeChar) {
-        this.pending = "";
-        this.query += closeChar + " ";
-        return this;
+    public QueryBuilder qbSep() {
+        return this.qbAdd(qbValueSep());
     }
 
     public QueryBuilder qbMerge(QueryBuilder toMerge) {

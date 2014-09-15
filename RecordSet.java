@@ -5,7 +5,6 @@
 package hw2.java.library.database;
 
 import hw2.java.library.common.StatusVar;
-import hw2.java.library.database.fielddecorators.FieldModel;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -17,7 +16,7 @@ public class RecordSet {
     /**
      * Key: column alias , Value: value of field
      */
-    private final LinkedHashMap<String, DbVar> records = new LinkedHashMap<>();
+    private final LinkedHashMap<DbId, DbVar> records = new LinkedHashMap<>();
 
     public RecordSet(ResultSet rs, TableData tableData) throws SQLException {
         ResultSetMetaData meta = rs.getMetaData();
@@ -26,15 +25,34 @@ public class RecordSet {
             Object obj = rs.getObject(i + 1);
             String fieldName = meta.getColumnName(i + 1);
             String tableName = meta.getTableName(i + 1);
-            records.put(
+            String schemaName = meta.getSchemaName(i + 1);
+            String catName = meta.getCatalogName(i + 1);
+            boolean isPrimary = false;
+            try {
+                // In case of exception isPrimary is false
+                isPrimary = tableData.getPrimaryKeys().contains(
+                        new DbId.Field(catName, schemaName, tableName, fieldName
+                        ));
+            } catch (Exception e) {
+            }
+
+            DbVar v = new DbVar(obj,
                     fieldName,
-                    new DbVar(obj, fieldName, tableName, tableData.getPrimaryKeys().get(tableName).contains(fieldName))
+                    tableName,
+                    schemaName,
+                    catName,
+                    isPrimary
+            );
+
+            records.put(
+                    v.getId(),
+                    v
             );
         }
     }
 
-    public RecordSet(LinkedHashMap<String, DbVar> values) {
-        for (Map.Entry<String, DbVar> entry : values.entrySet()) {
+    public RecordSet(LinkedHashMap<DbId, DbVar> values) {
+        for (Map.Entry<DbId, DbVar> entry : values.entrySet()) {
             records.put(
                     entry.getKey(),
                     entry.getValue()
@@ -54,22 +72,22 @@ public class RecordSet {
         return (String[]) records.keySet().toArray();
     }
 
-    public LinkedHashMap<String, DbVar> getRecords() {
+    public LinkedHashMap<DbId, DbVar> getRecords() {
         return records;
     }
 
-    public StatusVar getAccessor(FieldModel model) {
-        return records.get(model.getField());
+    public StatusVar getAccessor(DbId key) {
+        return records.get(key);
     }
 
     /*
      Shortcuts for accessor
      */
-    public Object getValue(FieldModel model) {
-        return this.getAccessor(model).getValue();
+    public Object getValue(DbId key) {
+        return this.getAccessor(key).getValue();
     }
 
-    public <T> void setValue(FieldModel model, T val) {
-        this.getAccessor(model).setValue(val);
+    public <T> void setValue(DbId key, T val) {
+        this.getAccessor(key).setValue(val);
     }
 }

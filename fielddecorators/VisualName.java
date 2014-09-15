@@ -4,12 +4,15 @@
  */
 package hw2.java.library.database.fielddecorators;
 
+import hw2.java.library.database.EntityModel;
+import hw2.java.library.database.FieldModel;
+
 public class VisualName extends FieldModel {
 
     private String name;
 
-    public VisualName(String field, String name) {
-        super(field);
+    public VisualName(String field, String name, EntityModel model) {
+        super(field, model);
         this.name = name;
     }
 

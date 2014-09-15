@@ -6,16 +6,17 @@ package hw2.java.library.database;
 
 import hw2.java.library.common.StatusVar;
 
-public class DbVar<T> extends StatusVar {
+public class DbVar<T> extends StatusVar implements DbIdentifier {
 
-    protected String fieldName;
-    protected String tableName;
+    protected String fieldName, tableName, catalogName, schemaName;
     protected boolean primaryKey;
 
-    public DbVar(Object val, String fieldName, String tableName, boolean primaryKey) {
+    public DbVar(Object val, String fieldName, String tableName, String schemaName, String catalogName, boolean primaryKey) {
         super(val);
         this.fieldName = fieldName;
         this.tableName = tableName;
+        this.catalogName = catalogName;
+        this.schemaName = schemaName;
         this.primaryKey = primaryKey;
     }
 
@@ -27,7 +28,25 @@ public class DbVar<T> extends StatusVar {
         return tableName;
     }
 
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    public String getCatalogName() {
+        return catalogName;
+    }
+
     public boolean isPrimaryKey() {
         return primaryKey;
+    }
+
+    @Override
+    public DbId getId() {
+        return new DbId.Field(catalogName, schemaName, tableName, fieldName);
+    }
+
+    @Override
+    public String[] getPath() {
+        return new String[]{catalogName, schemaName, tableName, fieldName};
     }
 }

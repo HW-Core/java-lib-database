@@ -12,14 +12,10 @@ import java.sql.SQLException;
 
 public class DbConnection {
 
-    public PropConnection propConn = null;
+    public static PropConnection propConn = new PropConnection();
 
     public Connection conn = null;
     public PreparedStatement prepStat = null;
-    
-    public DbConnection() {
-        propConn = new PropConnection();
-    }
 
     /**
      * Apre una connessione al database
@@ -27,12 +23,12 @@ public class DbConnection {
      * @param dbName il nome del database a cui collegarsi
      * @return l'oggetto Connection appena aperto
      */
-    public Connection startConn(String dbName,Driver driver,String query) {
+    public Connection startConn(String dbName, Driver driver, String query) {
         Connection c = null;
         try {
             DriverManager.registerDriver(driver);
-            
-            c = DriverManager.getConnection(propConn.getConnection(dbName,query), propConn.getUsername(), propConn.getPassword());
+
+            c = DriverManager.getConnection(propConn.getConnection(dbName, query), propConn.getUsername(), propConn.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,7 +38,7 @@ public class DbConnection {
 
     /**
      * Chiude le connessioni e annulla i puntatori
-        *
+     *
      */
     public void releaseAll() {
         if (prepStat != null) {
@@ -66,12 +62,12 @@ public class DbConnection {
         }
     }
 
-    public PropConnection getPropConn() {
+    public static PropConnection getPropConn() {
         return propConn;
     }
 
-    public void setPropConn(PropConnection propConn) {
-        this.propConn = propConn;
+    public static void setPropConn(PropConnection pconn) {
+        propConn = pconn;
     }
 
     public Connection getConn() {

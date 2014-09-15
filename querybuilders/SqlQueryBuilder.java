@@ -4,11 +4,44 @@
  */
 package hw2.java.library.database.querybuilders;
 
-import hw2.java.library.common.DateTools;
-import java.text.DateFormat;
 import java.util.Map;
 
-public class MysqlQBuilder extends QueryBuilder {
+public class SqlQueryBuilder extends QueryBuilder {
+
+    public enum SqlJoinTypes implements JoinTypes {
+
+        INNER("INNER"),
+        LEFT("LEFT"),
+        RIGHT("RIGHT"),
+        FULL("FULL");
+
+        private String type;
+
+        private SqlJoinTypes(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String getType() {
+            return type;
+        }
+    }
+
+    public enum SqlOrderType implements OrderType {
+
+        ASC("ASC"),
+        DESC("DESC");
+        private String type;
+
+        private SqlOrderType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String getType() {
+            return type;
+        }
+    }
 
     @Override
     public QueryBuilder select(String... args) {
@@ -49,6 +82,34 @@ public class MysqlQBuilder extends QueryBuilder {
     }
 
     @Override
+    public QueryBuilder join(JoinTypes type, String... args) {
+        int i = 0;
+
+        String table = args != null && args.length > 0 ? args[0] : "";
+
+        do {
+
+            this.qbAdd(type.getType(), "", "")
+                    .qbAdd("JOIN", "", table);
+            i++;
+
+            if (i < args.length) {
+                table = args[i];
+            } else {
+                break;
+            }
+
+        } while (true);
+
+        return this;
+    }
+
+    @Override
+    public QueryBuilder on(String... args) {
+        return this.qbAdd("ON", " AND ", args);
+    }
+
+    @Override
     public QueryBuilder into(String tableName, String... args) {
         return this.qbAdd("INTO", "", tableName).qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
     }
@@ -68,10 +129,6 @@ public class MysqlQBuilder extends QueryBuilder {
         String sValues[] = new String[args.length];
 
         for (int i = 0; i < args.length; i++) {
-            if (args[i] != null) {
-                System.out.println(args[i].getClass().getName());
-            }
-
             if (args[i] instanceof String) {
                 sValues[i] = "'" + args[i] + "'";
             } else if (args[i] instanceof java.util.Date) {
@@ -127,12 +184,12 @@ public class MysqlQBuilder extends QueryBuilder {
 
     @Override
     public QueryBuilder or(String... args) {
-        return this.qbAdd("", " OR ", args);
+        return this.qbAdd("OR", " OR ", args);
     }
 
     @Override
     public QueryBuilder and(String... args) {
-        return this.qbAdd("", " AND ", args);
+        return this.qbAdd("AND", " AND ", args);
     }
 
     /**
@@ -145,25 +202,30 @@ public class MysqlQBuilder extends QueryBuilder {
         return this.qbAdd("IN").qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
     }
 
+    @Override
+    public QueryBuilder qbCompare() {
+        return this.qbAdd("=");
+    }
+
     // use polymorphism as "switcher" for search condition
     // case String:
     @Override
-    public <T extends String> QueryBuilder qbCompare(String field, T searchVal) {
-        searchVal = (T) QueryTools.fixSqlString(searchVal);
-        return this.qbAdd(" " + field + " LIKE '%" + searchVal + "%'").qbSep();
+    public <T extends String> QueryBuilder qbCompare(T compareWith) {
+        compareWith = (T) (compareWith.isEmpty() ? "" : "'" + compareWith + "'");
+        return this.qbAdd("LIKE", "", compareWith);
     }
 
     // default:
     @Override
-    public <T> QueryBuilder qbCompare(String field, T searchVal) {
-        return this.qbAdd(" " + field + " = " + searchVal).qbSep();
+    public <T> QueryBuilder qbCompare(T compareWith) {
+        return this.qbCompare().qbAdd("", "", compareWith);
     }
 
     @Override
     public <T> QueryBuilder qbCompare(Map.Entry<String, T>... values) {
         for (int i = 0; i < values.length; i++) {
             Map.Entry<String, T> entry = values[i];
-            this.qbCompare(entry.getKey(), entry.getValue());
+            this.qbAdd(entry.getKey()).qbCompare(entry.getValue());
             if (i < values.length - 1) {
                 this.qbSep();
             }
@@ -173,20 +235,26 @@ public class MysqlQBuilder extends QueryBuilder {
     }
 
     @Override
-    public <T extends String> QueryBuilder qbAssign(String field, T assignVal) {
-        return this.qbAdd(" " + field + " = '" + assignVal + "'").qbSep();
+    public <T> QueryBuilder qbAssign() {
+        return this.qbAdd("=", "", "");
     }
 
     @Override
-    public <T> QueryBuilder qbAssign(String field, T assignVal) {
-        return this.qbAdd(" " + field + " = " + assignVal).qbSep();
+    public <T extends String> QueryBuilder qbAssign(T assignVal) {
+        assignVal = (T) (assignVal.isEmpty() ? "" : "'" + assignVal + "'");
+        return this.qbAdd("=", "", assignVal);
+    }
+
+    @Override
+    public <T> QueryBuilder qbAssign(T assignVal) {
+        return this.qbAssign().qbAdd("", "", assignVal);
     }
 
     @Override
     public <T> QueryBuilder qbAssign(Map.Entry<String, T>... values) {
         for (int i = 0; i < values.length; i++) {
             Map.Entry<String, T> entry = values[i];
-            this.qbAssign(entry.getKey(), entry.getValue());
+            this.qbAdd(entry.getKey()).qbAssign(entry.getValue());
             if (i < values.length - 1) {
                 this.qbSep();
             }
@@ -196,8 +264,13 @@ public class MysqlQBuilder extends QueryBuilder {
     }
 
     @Override
+    public QueryBuilder qbBuildName(String... names) {
+        return this.qbAdd("`").qbAdd("", "`.`", names).qbAdd("`");
+    }
+
+    @Override
     public QueryBuilder qbCloseQuery() {
-        return this.qbCloseQuery(";");
+        return this.qbAdd(";", "", "");
     }
 
     @Override

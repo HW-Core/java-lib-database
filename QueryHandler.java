@@ -12,18 +12,16 @@ import java.util.logging.Logger;
 
 public abstract class QueryHandler extends DbConnection {
 
-    protected final EntityModel model;
     protected Class rsClass;
     private final Driver driver;
     private final String connQuery;
 
-    public QueryHandler(EntityModel model, Driver driver, String connQuery) {
-        this(model, RecordSet.class, driver, connQuery);
+    public QueryHandler(Driver driver, String connQuery) {
+        this(RecordSet.class, driver, connQuery);
     }
 
-    public <T extends RecordSet> QueryHandler(EntityModel model, Class<T> rsClass, Driver driver, String connQuery) {
+    public <T extends RecordSet> QueryHandler(Class<T> rsClass, Driver driver, String connQuery) {
         super();
-        this.model = model;
         this.rsClass = rsClass;
         this.driver = driver;
         this.connQuery = connQuery;
@@ -33,10 +31,6 @@ public abstract class QueryHandler extends DbConnection {
     protected void finalize() throws Throwable {
         super.finalize();
         releaseAll();
-    }
-
-    public EntityModel getModel() {
-        return model;
     }
 
     public Class getRsClass() {
@@ -55,6 +49,7 @@ public abstract class QueryHandler extends DbConnection {
     }
 
     public ResultSet execute(String query) {
+        System.out.println(query);
         try {
             this.conn = this.startConn(propConn.getDatabase(), this.driver, this.connQuery);
 

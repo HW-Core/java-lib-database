@@ -14,15 +14,17 @@ public class QueryTools {
      * @param stringa la stringa che bisogna processare
      * @return la stringa con le adeguate sostituzioni
      */
-    public static String fixSqlString(String stringa) {
+    public static String fixSqlString(String string) {
+        if (string==null || string.isEmpty())
+            return "";
         // controllare l'esistenza di metodi preesistenti
         //XXX previene il crash durante l'esecuzione di una query di ricerca con apostrofo
-        stringa = stringa.replace("'", "''");
+        string = string.replace("'", "''");
         //XXX esclude la possibilita' di utilizzare gli altri caratteri speciali SQL durante la ricerca
-        stringa = stringa.replace("_", "\\_");
-        stringa = stringa.replace("%", "\\%");
-
-        return stringa;
+        string = string.replace("_", "\\_");
+        string = string.replace("%", "\\%");
+        
+        return string;
     }
 
     /**
