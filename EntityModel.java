@@ -102,7 +102,7 @@ abstract public class EntityModel extends MyObject implements DbIdentifier {
         return new String[]{
             this.getSchemaModel().getDbModel().getDbName(),
             this.getSchemaModel().getSchemaName(),
-            this.getTableName(),};
+            this.getTableName()};
     }
 
     @Override

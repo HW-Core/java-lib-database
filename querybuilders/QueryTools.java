@@ -7,26 +7,6 @@ package hw2.java.library.database.querybuilders;
 import java.util.List;
 
 public class QueryTools {
-
-    /**
-     * Fix per tutti i caratteri speciali di una query sql
-     *
-     * @param stringa la stringa che bisogna processare
-     * @return la stringa con le adeguate sostituzioni
-     */
-    public static String fixSqlString(String string) {
-        if (string==null || string.isEmpty())
-            return "";
-        // controllare l'esistenza di metodi preesistenti
-        //XXX previene il crash durante l'esecuzione di una query di ricerca con apostrofo
-        string = string.replace("'", "''");
-        //XXX esclude la possibilita' di utilizzare gli altri caratteri speciali SQL durante la ricerca
-        string = string.replace("_", "\\_");
-        string = string.replace("%", "\\%");
-        
-        return string;
-    }
-
     /**
      * Da utilizzare per creare i parametri di una query su tabelle relazionali
      *

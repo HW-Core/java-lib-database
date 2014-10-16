@@ -107,6 +107,10 @@ public abstract class QueryBuilder implements IfIface {
     public abstract QueryBuilder or(String... args);
 
     public abstract QueryBuilder and(String... args);
+    
+    public abstract QueryBuilder not(String condition);
+    
+    public abstract <T> QueryBuilder between(T startVal,T endVal);
 
     public abstract <T> QueryBuilder qbCompare();
 
@@ -134,6 +138,8 @@ public abstract class QueryBuilder implements IfIface {
     public abstract QueryBuilder qbBuildName(String... names);
 
     public abstract String qbValueSep();
+    
+    public abstract <T> T qbNormalizeVal(T val);
 
     /*
      * Utility methods

@@ -192,6 +192,16 @@ public class SqlQueryBuilder extends QueryBuilder {
         return this.qbAdd("AND", " AND ", args);
     }
 
+    @Override
+    public QueryBuilder not(String condition) {
+        return this.qbAdd("NOT", "", condition);
+    }
+
+    @Override
+    public <T> QueryBuilder between(T startVal, T endVal) {
+        return this.qbAdd("BETWEEN", "", qbNormalizeVal(startVal)).and().qbAdd("", "", qbNormalizeVal(endVal));
+    }
+
     /**
      *
      * @param args passed args will be included in brackets separated by comma
@@ -211,7 +221,7 @@ public class SqlQueryBuilder extends QueryBuilder {
     // case String:
     @Override
     public <T extends String> QueryBuilder qbCompare(T compareWith) {
-        compareWith = (T) (compareWith.isEmpty() ? "" : "'" + compareWith + "'");
+        compareWith = (T) (compareWith.isEmpty() ? "" : qbNormalizeVal(compareWith));
         return this.qbAdd("LIKE", "", compareWith);
     }
 
@@ -241,7 +251,7 @@ public class SqlQueryBuilder extends QueryBuilder {
 
     @Override
     public <T extends String> QueryBuilder qbAssign(T assignVal) {
-        assignVal = (T) (assignVal.isEmpty() ? "" : "'" + assignVal + "'");
+        assignVal = (T) (assignVal.isEmpty() ? "" : qbNormalizeVal(assignVal));
         return this.qbAdd("=", "", assignVal);
     }
 
@@ -277,4 +287,26 @@ public class SqlQueryBuilder extends QueryBuilder {
     public String qbValueSep() {
         return ",";
     }
+
+    @Override
+    public Object qbNormalizeVal(Object val) {
+        if (val == null) {
+            return null;
+        }
+
+        if (val instanceof String) {
+            String string=(String)val;
+            if (string.isEmpty()) {
+                return "";
+            }
+
+            //string = string.replace("_", "\\_");
+            //string = string.replace("%", "\\%");
+
+            return "'"+string+"'";
+        } else {
+            return val;
+        }
+    }
+
 }
