@@ -2,17 +2,18 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.java.library.database;
+package hw2.modules.java.src.library.database;
 
-import hw2.java.library.common.Entry;
-import hw2.java.library.common.MyObject;
-import hw2.java.library.database.fielddecorators.CalculatedField;
-import hw2.java.library.database.fielddecorators.RelField;
+import hw2.modules.java.src.library.common.Entry;
+import hw2.modules.java.src.library.common.MyObject;
+import hw2.modules.java.src.library.database.fielddecorators.CalculatedField;
+import hw2.modules.java.src.library.database.fielddecorators.RelField;
+import hw2.modules.java.src.library.database.querybuilders.QueryBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import soul.system.common.MyQueryHandler;
+import system.common.MyQueryHandler;
 
 abstract public class EntityModel extends MyObject implements DbIdentifier {
 
@@ -59,13 +60,13 @@ abstract public class EntityModel extends MyObject implements DbIdentifier {
         return tableName;
     }
 
-    public String[] getFieldsName() {
+    public String[] getFieldsName(QueryBuilder qb) {
         ArrayList<String> names = new ArrayList<>();
         for (FieldModel m : decList.values()) {
-
+            qb.reset();
             names.add(m instanceof CalculatedField
                     ? ((CalculatedField) m).getExpression()
-                    : MyQueryHandler.getQb().qbBuildName(m.getPath()).toString());
+                    : qb.qbBuildName(m.getPath()).toString());
         }
 
         return names.toArray(new String[names.size()]);

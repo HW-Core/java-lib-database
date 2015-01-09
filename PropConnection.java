@@ -2,8 +2,9 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.java.library.database;
+package hw2.modules.java.src.library.database;
 
+import hw2.modules.java.src.library.common.FileSystem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class PropConnection {
         prop = new Properties();
 
         try {
-            prop.load(new FileInputStream(new File("properties/connection.properties")));
+            String path=FileSystem.getWorkingPath()+"properties/connection.properties";
+            prop.load(new FileInputStream(new File(path)));
         } catch (IOException ioe) {
             JOptionPane.showMessageDialog(null, "Configuration file not found", "Warning", JOptionPane.WARNING_MESSAGE);
             System.exit(0);

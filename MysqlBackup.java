@@ -1,4 +1,4 @@
-package hw2.java.library.database;
+package hw2.modules.java.src.library.database;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
