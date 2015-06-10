@@ -2,7 +2,7 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.modules.java.src.library.database.querybuilders;
+package hwcore.modules.java.src.library.database.querybuilders;
 
 import java.util.Map;
 
@@ -120,11 +120,6 @@ public class SqlQueryBuilder extends QueryBuilder {
     }
 
     @Override
-    public QueryBuilder values(String... args) {
-        return this.qbAdd("VALUES").qbAdd("(").qbAdd("", this.qbValueSep(), args).qbAdd(")");
-    }
-
-    @Override
     public QueryBuilder values(Object... args) {
         String sValues[] = new String[args.length];
 
@@ -142,7 +137,7 @@ public class SqlQueryBuilder extends QueryBuilder {
             }
         }
 
-        return this.values(sValues);
+        return this.qbAdd("VALUES").qbAdd("(").qbAdd("", this.qbValueSep(), sValues).qbAdd(")");
     }
 
     /**
@@ -295,15 +290,14 @@ public class SqlQueryBuilder extends QueryBuilder {
         }
 
         if (val instanceof String) {
-            String string=(String)val;
+            String string = (String) val;
             if (string.isEmpty()) {
                 return "";
             }
 
             //string = string.replace("_", "\\_");
             //string = string.replace("%", "\\%");
-
-            return "'"+string+"'";
+            return "'" + string + "'";
         } else {
             return val;
         }

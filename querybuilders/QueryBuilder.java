@@ -2,11 +2,11 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.modules.java.src.library.database.querybuilders;
+package hwcore.modules.java.src.library.database.querybuilders;
 
-import hw2.modules.java.src.library.common.If;
-import hw2.modules.java.src.library.common.IfIface;
-import hw2.modules.java.src.library.common.StringTools;
+import hwcore.modules.java.src.library.common.If;
+import hwcore.modules.java.src.library.common.IfIface;
+import hwcore.modules.java.src.library.common.StringTools;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,8 +75,6 @@ public abstract class QueryBuilder implements IfIface {
     public abstract QueryBuilder into(String tableName, String... args);
 
     public abstract QueryBuilder into(String tableName);
-
-    public abstract QueryBuilder values(String... args);
 
     public abstract QueryBuilder values(Object... args);
 

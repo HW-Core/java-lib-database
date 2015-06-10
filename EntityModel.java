@@ -2,13 +2,13 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hw2.modules.java.src.library.database;
+package hwcore.modules.java.src.library.database;
 
-import hw2.modules.java.src.library.common.Entry;
-import hw2.modules.java.src.library.common.MyObject;
-import hw2.modules.java.src.library.database.fielddecorators.CalculatedField;
-import hw2.modules.java.src.library.database.fielddecorators.RelField;
-import hw2.modules.java.src.library.database.querybuilders.QueryBuilder;
+import hwcore.modules.java.src.library.common.Entry;
+import hwcore.modules.java.src.library.common.MyObject;
+import hwcore.modules.java.src.library.database.fielddecorators.CalculatedField;
+import hwcore.modules.java.src.library.database.fielddecorators.RelField;
+import hwcore.modules.java.src.library.database.querybuilders.QueryBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
