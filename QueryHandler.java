@@ -5,8 +5,10 @@
 package hwcore.modules.java.src.library.database;
 
 import java.sql.Driver;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +64,50 @@ public abstract class QueryHandler extends DbConnection {
         } catch (SQLException ex) {
             Logger logger = Logger.getLogger(QueryHandler.class.getName());
             logger.log(Level.SEVERE, query);
+            logger.log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+
+    public PreparedStatement executeStatement(String query) {
+        System.out.println(query);
+        try {
+            this.conn = this.startConn(propConn.getDatabase(), this.driver, this.connQuery);
+
+            prepStat = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+            prepStat.execute();
+            return prepStat;
+        } catch (SQLException ex) {
+            Logger logger = Logger.getLogger(QueryHandler.class.getName());
+            logger.log(Level.SEVERE, query);
+            logger.log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+    
+    public PreparedStatement getStatement(String query) {
+        System.out.println(query);
+        try {
+            this.conn = this.startConn(propConn.getDatabase(), this.driver, this.connQuery);
+
+            return conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+        } catch (SQLException ex) {
+            Logger logger = Logger.getLogger(QueryHandler.class.getName());
+            logger.log(Level.SEVERE, query);
+            logger.log(Level.SEVERE, null, ex);
+        }
+
+        return null;
+    }
+    
+    public PreparedStatement executeStatement(PreparedStatement p) {
+        try {
+            p.execute();
+            return p;
+        } catch (SQLException ex) {
+            Logger logger = Logger.getLogger(QueryHandler.class.getName());
             logger.log(Level.SEVERE, null, ex);
         }
 
