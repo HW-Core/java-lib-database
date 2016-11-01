@@ -2,9 +2,9 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database;
+package hw_core.lib_database;
 
-import hwcore.modules.java.src.library.common.StatusVar;
+import hw_core.lib_common.StatusVar;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

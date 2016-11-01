@@ -2,11 +2,11 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database;
+package hw_core.lib_database;
 
-import hwcore.modules.java.src.library.common.Permissions;
-import hwcore.modules.java.src.library.database.fielddecorators.RestrictedField;
-import hwcore.modules.java.src.library.database.fielddecorators.VisualName;
+import hw_core.lib_common.Permissions;
+import hw_core.lib_database.fielddecorators.RestrictedField;
+import hw_core.lib_database.fielddecorators.VisualName;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -2,11 +2,11 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database.querybuilders;
+package hw_core.lib_database.querybuilders;
 
-import hwcore.modules.java.src.library.common.If;
-import hwcore.modules.java.src.library.common.IfIface;
-import hwcore.modules.java.src.library.common.StringTools;
+import hw_core.lib_common.If;
+import hw_core.lib_common.IfIface;
+import hw_core.lib_common.StringTools;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;

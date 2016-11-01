@@ -2,9 +2,9 @@
  *  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved
  *  * GNU General Public License version 3; see http://www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database;
+package hw_core.lib_database;
 
-import hwcore.modules.java.src.library.common.StringTools;
+import hw_core.lib_common.StringTools;
 
 /**
  * This is the identifier of a single field in a database calculated on its full

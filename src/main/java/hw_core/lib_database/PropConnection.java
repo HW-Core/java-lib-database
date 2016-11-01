@@ -2,9 +2,9 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database;
+package hw_core.lib_database;
 
-import hwcore.modules.java.src.library.common.FileSystem;
+import hw_core.lib_common.FileSystem;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,11 +19,11 @@ public class PropConnection {
     public PropConnection() {
         prop = new Properties();
 
+        String path=FileSystem.getWorkingPath()+"properties/connection.properties";
         try {
-            String path=FileSystem.getWorkingPath()+"properties/connection.properties";
             prop.load(new FileInputStream(new File(path)));
         } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(null, "Configuration file not found", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Configuration file not found on path: "+path, "Warning", JOptionPane.WARNING_MESSAGE);
             System.exit(0);
         }
     }

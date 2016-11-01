@@ -2,18 +2,17 @@
  * Copyright (C) 2007 - 2014 Hyperweb2 All rights reserved.
  * GNU General Public License version 3; see www.hyperweb2.com/terms/
  */
-package hwcore.modules.java.src.library.database;
+package hw_core.lib_database;
 
-import hwcore.modules.java.src.library.common.Entry;
-import hwcore.modules.java.src.library.common.MyObject;
-import hwcore.modules.java.src.library.database.fielddecorators.CalculatedField;
-import hwcore.modules.java.src.library.database.fielddecorators.RelField;
-import hwcore.modules.java.src.library.database.querybuilders.QueryBuilder;
+import hw_core.lib_common.Entry;
+import hw_core.lib_common.MyObject;
+import hw_core.lib_database.fielddecorators.CalculatedField;
+import hw_core.lib_database.fielddecorators.RelField;
+import hw_core.lib_database.querybuilders.QueryBuilder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import system.common.MyQueryHandler;
 
 abstract public class EntityModel extends MyObject implements DbIdentifier {
 
